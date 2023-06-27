@@ -64,6 +64,7 @@ public class WebSecurityConfig {
         http.formLogin((formLogin) ->
                 formLogin
                         .loginPage("/api/user/login").permitAll()
+
         );
 
         // 필터 관리      인증처리필터  앞에 인가 필터 놓았고 user password 필터앞에 인증필터 놓음

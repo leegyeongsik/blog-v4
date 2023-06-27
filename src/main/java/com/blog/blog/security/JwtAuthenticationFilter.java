@@ -1,6 +1,7 @@
 package com.blog.blog.security;
 
 import com.blog.blog.dto.LoginRequestDto;
+import com.blog.blog.entity.UserRoleEnum;
 import com.blog.blog.jwt.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -11,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
@@ -44,8 +46,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
         protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult ) throws IOException {
             String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
-
-            String token = jwtUtil.createToken(username, "ROLE_USER");
+            UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
+            String token = jwtUtil.createToken(username, role);
             response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
             String state = "로그인완료"+" " + "status:" +response.getStatus();
 
@@ -58,8 +60,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed ) {
-        response.setStatus(401);
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed ) throws IOException {
+        response.setStatus(400);
+        response.getStatus();
+        String state = "회원을 찾을 수 없습니다:" +response;
+
+        new ObjectMapper().writeValue(response.getOutputStream(), state);
+
+        ;
     }
 
 }

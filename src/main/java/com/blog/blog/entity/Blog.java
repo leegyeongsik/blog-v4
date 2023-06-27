@@ -1,10 +1,14 @@
 package com.blog.blog.entity;
 
 import com.blog.blog.dto.BlogRequestDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -29,6 +33,13 @@ public class Blog  extends Timestamped{
     @Column(name = "password" , nullable = false)
     private String password;
 
+    @OneToMany(mappedBy = "blog" ,fetch = FetchType.LAZY , orphanRemoval = true )
+    private List<Comment> commentList = new ArrayList<>();
+
+
+
+
+
     public Blog(BlogRequestDto blogRequestDto , User user){
         this.title = blogRequestDto.getTitle();
         this.username = user.getUsername();
@@ -36,7 +47,6 @@ public class Blog  extends Timestamped{
         this.password = user.getPassword();
     }
     public void update(BlogRequestDto blogRequestDto ){
-//        setTitle(blogRequestDto.getTitle()); 굳이 세터를 사용한다면?
         this.title = blogRequestDto.getTitle();
         this.content = blogRequestDto.getContent();
     }
