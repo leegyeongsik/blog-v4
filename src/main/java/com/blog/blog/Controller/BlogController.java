@@ -10,7 +10,6 @@ import com.blog.blog.security.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -39,8 +38,8 @@ public class BlogController {
                                       @RequestBody BlogRequestDto blogRequestDto ,
                                       @AuthenticationPrincipal UserDetailsImpl userDetails,
                                       HttpServletResponse response) throws IOException {
-        BlogResponseDto blogResponseDto = new BlogResponseDto(blogService.updatePost(blogRequestDto,id,userDetails.getUser() , response));
-        return blogResponseDto;
+        Blog blog = blogService.updatePost(blogRequestDto,id,userDetails.getUser() , response);
+        return new BlogResponseDto(blog , blogService.updateComment(blog));
     }
     @DeleteMapping("/blogs/{id}") // 특정 id 게시글 수정하는데 토큰 아이디랑 , username 이랑 같다면 삭제
     public String deletePost(@PathVariable Long id  ,
@@ -61,7 +60,7 @@ public class BlogController {
                                              @AuthenticationPrincipal UserDetailsImpl userDetails ,
                                              @PathVariable Long blogId,
                                              HttpServletResponse response) throws IOException {
-        Blog blog =blogService.updateBlogComment(id , requestDto , userDetails.getUser() , blogId ,response );
+        Blog blog =blogService.updateBlogComment(id , requestDto , userDetails.getUser() , blogId ,response ); // blogid -> comment id
         return new BlogResponseDto(blog , blogService.updateComment(blog));
     }
     @DeleteMapping("/blogs/{id}/comments/{blogId}")
