@@ -18,6 +18,8 @@ public class Comment extends Timestamped{
     private Long id;
     @Column(name = "comment" , nullable = false)
     private String comment;
+    @Column(name = "likes")
+    private Long likes;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -30,10 +32,18 @@ public class Comment extends Timestamped{
         this.user = user;
         this.blog = blog;
         this.comment = comment;
+        this.likes = 0L;
     }
 
 
     public void update(BlogCommentRequestDto requestDto) {
         this.comment = requestDto.getComment();
+    }
+
+    public void CommentLikeUpdate(){
+        this.likes +=1L;
+    }
+    public void CommentLikeCancelUpdate(){
+        this.likes -=1L;
     }
 }

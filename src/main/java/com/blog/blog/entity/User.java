@@ -28,8 +28,7 @@ public class User {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
-    @OneToMany(mappedBy = "user" , fetch = FetchType.LAZY)
-    private List<Comment> commentList = new ArrayList<>();
+
 
     public User(String username, String password , UserRoleEnum role) {
         this.username = username;

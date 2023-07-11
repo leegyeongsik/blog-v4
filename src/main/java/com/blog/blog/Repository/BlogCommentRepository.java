@@ -9,8 +9,7 @@ import java.util.Optional;
 public interface BlogCommentRepository extends JpaRepository<Comment , Long> {
     List<Comment> findAllByOrderByModifiedAtDesc();
 
+//    Optional<Comment> findByIdAndBlog_Id(Long blogId , Long id);
 
-    Optional<Object> findByIdAndBlogId(Long blogId, Long id);
-
-    Optional<Comment> findByIdAndBlog_Id(Long blogId , Long id);
+    Optional<Comment> findByBlog_idAndId(Long id, Long blogId);
 }

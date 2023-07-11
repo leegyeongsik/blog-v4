@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class BlogCommentResponseDto {
-    private String comment;
+        private String comment;
 
 
     public BlogCommentResponseDto(String comment){
